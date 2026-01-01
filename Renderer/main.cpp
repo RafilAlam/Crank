@@ -4,5 +4,6 @@
 
 int main(void)
 {
-	
+	if (!glfwInit())
+		std::cout << "GLFW Failed to initialise!" << std::endl;
 }
