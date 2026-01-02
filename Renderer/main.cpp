@@ -2,6 +2,54 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+std::string vShaderSource = R"(
+#version 460
+
+in vec3 aPos;
+
+void main() 
+{
+	gl_Position = vec4(aPos, 1.0f);
+}
+)";
+
+std::string fShaderSource = R"(
+#version 460
+
+out vec4 FragColor;
+
+void main() 
+{
+	FragColor = vec4(0.57f, 0.32f, 0.27f, 1.0f);
+}
+)";
+
+void initShaders(void)
+{
+	GLuint program = glCreateProgram();
+
+	GLuint vshader = glCreateShader(GL_VERTEX_SHADER);
+	GLuint fshader = glCreateShader(GL_FRAGMENT_SHADER);
+
+	const char* vsrc = vShaderSource.c_str();
+	const char* fsrc = fShaderSource.c_str();
+
+	glShaderSource(vshader, 1, &vsrc, NULL);
+	glShaderSource(fshader, 1, &fsrc, NULL);
+
+	glCompileShader(vshader);
+	glCompileShader(fshader);
+
+	glAttachShader(program, vshader);
+	glAttachShader(program, fshader);
+
+	glLinkProgram(program);
+	glUseProgram(program);
+
+	glDeleteShader(vshader);
+	glDeleteShader(fshader);
+}
+
 int main(void)
 {
 	if (!glfwInit())
