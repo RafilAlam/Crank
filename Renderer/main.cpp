@@ -1,54 +1,5 @@
-#include <iostream>
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-
-std::string vShaderSource = R"(
-#version 460
-
-in vec3 aPos;
-
-void main() 
-{
-	gl_Position = vec4(aPos, 1.0f);
-}
-)";
-
-std::string fShaderSource = R"(
-#version 460
-
-out vec4 FragColor;
-
-void main() 
-{
-	FragColor = vec4(0.57f, 0.32f, 0.27f, 1.0f);
-}
-)";
-
-void initShaders(void)
-{
-	GLuint program = glCreateProgram();
-
-	GLuint vshader = glCreateShader(GL_VERTEX_SHADER);
-	GLuint fshader = glCreateShader(GL_FRAGMENT_SHADER);
-
-	const char* vsrc = vShaderSource.c_str();
-	const char* fsrc = fShaderSource.c_str();
-
-	glShaderSource(vshader, 1, &vsrc, NULL);
-	glShaderSource(fshader, 1, &fsrc, NULL);
-
-	glCompileShader(vshader);
-	glCompileShader(fshader);
-
-	glAttachShader(program, vshader);
-	glAttachShader(program, fshader);
-
-	glLinkProgram(program);
-	glUseProgram(program);
-
-	glDeleteShader(vshader);
-	glDeleteShader(fshader);
-}
+#include "GLfunctions.hpp"
+#include "tools.hpp"
 
 int main(void)
 {
@@ -79,32 +30,30 @@ int main(void)
 		return -1;
 	}
 
-	float vertices[9] = {
+	std::vector<GLfloat> vertices = {
 		-0.5f, -0.5f, 0.0f,
-		0.0f, 0.5f, 0.0f,
-		0.5f, -0.5f, 0.0f
+		-0.25f, 0.5f, 0.0f,
+		0.0f, -0.5f, 0.0f,
 	};
 
-	GLuint VAO, VBO;
+	std::vector<GLuint> indices = {
+		0, 3, 2,
+		0, 1, 2
+	};
 
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-
-	glBindVertexArray(VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-
-	initShaders();
+	GLuint VAO = initVertexArray(vertices);
+	GLuint ProgramOrange = initShaders(fetchShader("tutorial.vert"), fetchShader("tutorial.frag"));
 
 	while (!glfwWindowShouldClose(window))
 	{
 		glClearColor(0.02f, 0.07f, 0.2f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		glUseProgram(ProgramOrange);
+		glBindVertexArray(VAO);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
+
+		//glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
