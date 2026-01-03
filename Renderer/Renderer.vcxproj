@@ -137,6 +137,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\Users\rafil\Downloads\stb_image.h" />
     <ClInclude Include="GLfunctions.hpp" />
     <ClInclude Include="tools.hpp" />
   </ItemGroup>
@@ -144,6 +145,10 @@
     <None Include="Shader Files\yellow.frag" />
     <None Include="tutorial.frag" />
     <None Include="tutorial.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="awesomeface.png" />
+    <Image Include="container.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
