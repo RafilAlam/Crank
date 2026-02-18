@@ -78,8 +78,6 @@ int main() {
   std::string fshader { loadShader("fragment.glsl") };
   const char* fshadercode { fshader.c_str() };
 
-  std::cout << "vertex shader code: " << vshadercode << std::endl;
-
   GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
   glShaderSource(vertexShader, 1, &vshadercode, NULL);
   glCompileShader(vertexShader);
