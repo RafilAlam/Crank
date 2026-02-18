@@ -1,4 +1,0 @@
-/home/rafil/Projects/Crank/build/CMakeFiles/glad.dir
-/home/rafil/Projects/Crank/build/CMakeFiles/crank.dir
-/home/rafil/Projects/Crank/build/CMakeFiles/edit_cache.dir
-/home/rafil/Projects/Crank/build/CMakeFiles/rebuild_cache.dir

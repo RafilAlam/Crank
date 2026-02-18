@@ -1,1 +1,0 @@
-/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/PROJECT_NAME.dir/link.d CMakeFiles/PROJECT_NAME.dir/src/main.cpp.o -o PROJECT_NAME  libglad.a
