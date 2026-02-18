@@ -1,6 +1,14 @@
 #include <iostream>
+#include <vector>
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+
+vector<int> vertices = {
+  -0.5f, ,-0.5f, 0.0f,
+  0.5f, -0.5f, 0.0f,
+  0.0f, 0.5f, 0.0f
+};
 
 int main() {
   if (!glfwInit()) {
@@ -26,8 +34,19 @@ int main() {
 
   glViewport(0, 0, 800, 600);
   glfwSetFramebufferSizeCallback(window, [](GLFWwindow* window, int width, int height) { glViewport(0, 0, width, height); } );
+  glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+
+  GLuint VBO;
+  glGenbuffers(1, &VBO);
+  glBindBuffer(GL_ARRAY_BUFFER, VBO);
+  glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(int), vertices.data(), GL_STATIC_DRAW);
 
   while(!glfwWindowShouldClose(window)) {
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+      glfwSetWindowShouldClose(window, true);
+
     glfwSwapBuffers(window);
     glfwPollEvents();
   }
