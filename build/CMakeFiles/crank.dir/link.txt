@@ -1,0 +1,1 @@
+/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/crank.dir/link.d CMakeFiles/crank.dir/src/main.cpp.o -o crank  libglad.a /usr/lib/libglfw.so.3.4
