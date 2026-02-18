@@ -3,8 +3,7 @@
 
 CMakeFiles/crank.dir/src/main.cpp.o: /home/rafil/Projects/Crank/src/main.cpp \
   /home/rafil/Projects/Crank/include/KHR/khrplatform.h \
-  /usr/include/GL/gl.h \
-  /usr/include/GL/glext.h \
+  /home/rafil/Projects/Crank/include/glad/glad.h \
   /usr/include/GLFW/glfw3.h \
   /usr/include/alloca.h \
   /usr/include/asm-generic/bitsperlong.h \
@@ -270,6 +269,8 @@ libglad.a:
 
 /usr/include/pthread.h:
 
+/usr/include/linux/stddef.h:
+
 /usr/include/linux/sched/types.h:
 
 /usr/include/linux/posix_types.h:
@@ -323,10 +324,6 @@ CMakeFiles/crank.dir/src/main.cpp.o:
 /usr/include/c++/15.2.1/new:
 
 /usr/include/c++/15.2.1/debug/assertions.h:
-
-/usr/include/c++/15.2.1/istream:
-
-/usr/include/c++/15.2.1/cwctype:
 
 /usr/include/c++/15.2.1/cstddef:
 
@@ -408,14 +405,6 @@ CMakeFiles/crank.dir/src/main.cpp.o:
 
 /usr/include/bits/types/struct___jmp_buf_tag.h:
 
-/usr/include/bits/types/__fpos64_t.h:
-
-/usr/include/bits/select.h:
-
-/usr/include/gnu/stubs.h:
-
-/usr/include/bits/pthreadtypes-arch.h:
-
 /usr/include/stdc-predef.h:
 
 /usr/include/c++/15.2.1/bits/locale_classes.tcc:
@@ -468,15 +457,19 @@ CMakeFiles/crank.dir/src/main.cpp.o:
 
 /usr/include/bits/byteswap.h:
 
-/usr/include/c++/15.2.1/ostream:
+/usr/include/bits/types/__fpos64_t.h:
 
-/usr/include/bits/libc-header-start.h:
+/usr/include/bits/select.h:
 
-/usr/include/linux/stddef.h:
+/usr/include/c++/15.2.1/istream:
 
-/usr/include/GL/gl.h:
+/usr/include/c++/15.2.1/cwctype:
 
-/usr/include/bits/long-double.h:
+/home/rafil/Projects/Crank/include/glad/glad.h:
+
+/usr/include/bits/types/sigset_t.h:
+
+/usr/include/c++/15.2.1/bits/locale_classes.h:
 
 /usr/include/bits/stdint-least.h:
 
@@ -492,13 +485,21 @@ CMakeFiles/crank.dir/src/main.cpp.o:
 
 /usr/include/bits/typesizes.h:
 
-/usr/include/GL/glext.h:
-
 /usr/include/bits/types/locale_t.h:
 
 /usr/include/asm-generic/int-ll64.h:
 
+/usr/include/bits/locale.h:
+
+/usr/include/wctype.h:
+
+/usr/include/bits/timex.h:
+
+/usr/include/bits/errno.h:
+
 /usr/include/bits/struct_mutex.h:
+
+/usr/include/bits/long-double.h:
 
 /usr/include/features.h:
 
@@ -512,21 +513,17 @@ CMakeFiles/crank.dir/src/main.cpp.o:
 
 /usr/include/c++/15.2.1/bits/basic_string.tcc:
 
-/usr/include/bits/locale.h:
-
-/usr/include/wctype.h:
-
-/usr/include/bits/timex.h:
-
-/usr/include/bits/errno.h:
+/usr/include/bits/types/mbstate_t.h:
 
 /usr/include/bits/floatn-common.h:
 
-/usr/include/bits/types/mbstate_t.h:
+/usr/include/c++/15.2.1/ostream:
 
-/usr/include/bits/types/sigset_t.h:
+/usr/include/bits/libc-header-start.h:
 
-/usr/include/c++/15.2.1/bits/locale_classes.h:
+/usr/include/gnu/stubs.h:
+
+/usr/include/bits/pthreadtypes-arch.h:
 
 /usr/include/bits/struct_rwlock.h:
 
@@ -537,12 +534,6 @@ CMakeFiles/crank.dir/src/main.cpp.o:
 /usr/include/c++/15.2.1/bits/functexcept.h:
 
 /usr/include/bits/types/struct_sched_param.h:
-
-/usr/include/ctype.h:
-
-/usr/include/c++/15.2.1/bits/stl_pair.h:
-
-/usr/include/bits/waitflags.h:
 
 /usr/include/c++/15.2.1/bits/exception_defines.h:
 
@@ -608,9 +599,9 @@ CMakeFiles/crank.dir/src/main.cpp.o:
 
 /usr/include/c++/15.2.1/bits/cxxabi_init_exception.h:
 
-/usr/include/c++/15.2.1/bits/cpp_type_traits.h:
-
 /usr/include/bits/cpu-set.h:
+
+/usr/include/c++/15.2.1/bits/cpp_type_traits.h:
 
 /usr/include/c++/15.2.1/bits/stl_construct.h:
 
@@ -687,3 +678,9 @@ CMakeFiles/crank.dir/src/main.cpp.o:
 /usr/include/c++/15.2.1/bits/invoke.h:
 
 /usr/include/c++/15.2.1/bits/stl_function.h:
+
+/usr/include/ctype.h:
+
+/usr/include/bits/waitflags.h:
+
+/usr/include/c++/15.2.1/bits/stl_pair.h:

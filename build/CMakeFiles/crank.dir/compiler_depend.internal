@@ -4,8 +4,7 @@
 CMakeFiles/crank.dir/src/main.cpp.o
  /home/rafil/Projects/Crank/src/main.cpp
  /home/rafil/Projects/Crank/include/KHR/khrplatform.h
- /usr/include/GL/gl.h
- /usr/include/GL/glext.h
+ /home/rafil/Projects/Crank/include/glad/glad.h
  /usr/include/GLFW/glfw3.h
  /usr/include/alloca.h
  /usr/include/asm-generic/bitsperlong.h
