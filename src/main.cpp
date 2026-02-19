@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <cmath>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -126,7 +127,11 @@ int main() {
     if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
       glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
 
+    float timeValue = glfwGetTime();
+    float greenValue = sin(timeValue) / 2.0f + 0.5f;
+    int vertexColorLocation = glGetUniformLocation(shaderProgram, "outColor");
     glUseProgram(shaderProgram);
+    glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, 0);
 
