@@ -7,9 +7,20 @@
 #include <GLFW/glfw3.h>
 
 std::vector<float> vertices = {
-  -0.5f, -0.5f, 0.0f,
-  0.5f, -0.5f, 0.0f,
-  0.0f, 0.5f, 0.0f
+  -0.5f, -0.5f, 0.0f, // bottom left
+  -0.5f,  0.5f, 0.0f, // top left
+   0.5f,  0.5f, 0.0f, // top right
+   0.5f, -0.5f, 0.0f, // bottom right
+   0.0f,  0.5f, 0.0f, // top middle
+  -0.4,   0.7f, 0.0f, // left tip
+   0.4f,  0.7f, 0.0f, // right tip
+};
+
+std::vector<unsigned int> indices = {
+  0, 1, 3,
+  2, 1, 3,
+  4, 5, 1,
+  4, 6, 2,
 };
 
 std::string loadShader(std::string fileName) {
@@ -44,7 +55,7 @@ int main() {
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-  GLFWwindow* window = glfwCreateWindow(799, 600, "Crank", NULL, NULL);
+  GLFWwindow* window = glfwCreateWindow(800, 600, "Crank", NULL, NULL);
   if (!window) {
     std::cout << "Failed to create GLFW window\n";
     glfwTerminate();
@@ -59,7 +70,6 @@ int main() {
 
   glViewport(0, 0, 800, 600);
   glfwSetFramebufferSizeCallback(window, [](GLFWwindow* window, int width, int height) { glViewport(0, 0, width, height); } );
-  glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
   GLuint VAO;
   glGenVertexArrays(1, &VAO);
@@ -68,7 +78,12 @@ int main() {
   GLuint VBO;
   glGenBuffers(1, &VBO);
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(int), vertices.data(), GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
+
+  GLuint EBO;
+  glGenBuffers(1, &EBO);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
 
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
   glEnableVertexAttribArray(0);
@@ -94,9 +109,12 @@ int main() {
   glLinkProgram(shaderProgram);
 
   glBindVertexArray(0);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
   glDeleteShader(vertexShader);
   glDeleteShader(fragmentShader);
 
+  glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   while(!glfwWindowShouldClose(window)) {
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -105,7 +123,7 @@ int main() {
 
     glUseProgram(shaderProgram);
     glBindVertexArray(VAO);
-    glDrawArrays(GL_TRIANGLES, 0, vertices.size());
+    glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, 0);
 
     glfwSwapBuffers(window);
     glfwPollEvents();
