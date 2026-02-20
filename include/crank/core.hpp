@@ -16,9 +16,9 @@ namespace crank {
 class Shader {
 private:
   const char* fetchShader(std::string fileName) {
-    std::ifstream file(fileName);
+    std::ifstream file("./shaders/" + fileName);
     if (!file)
-      std::cerr << "FAILED TO LOAD SHADER: " << fileName;
+      std::cerr << "FAILED TO LOAD SHADER: " << fileName << std::endl;
     
     std::string content;
     std::string line;
@@ -32,6 +32,7 @@ private:
 public:
   const GLuint handle;
   Shader(std::string fileName, GLenum shaderType);
+  void Delete();
 };
 
 class ShaderProgram {
@@ -39,8 +40,9 @@ private:
 public:
   const GLuint handle;
   ShaderProgram();
-  void AttachShader(Shader shader);
+  void AttachShader(Shader &shader);
   void Link();
+  void Use();
 };
 
 class Window {
@@ -56,7 +58,7 @@ public:
   std::vector<float> vertices;
   std::vector<unsigned int> indices;
   unsigned long long offsetIndices;
-  unsigned long long baseVertex;
+  GLint baseVertex;
   Object(std::vector<float> &p_vertices, std::vector<unsigned int> &p_indices);
   void Draw();
 };
@@ -66,24 +68,41 @@ private:
 public:
   GLenum type;
   GLuint handle;
-  Buffer(GLenum bufferType, std::vector<Object> initialObjects);
+  Buffer(GLenum bufferType, std::vector<Object> &initialObjects);
   void Bind();
   void Data(std::vector<float> &data);
   void Data(std::vector<unsigned int> &data);
 };
 
-class VBO {
+class VertexArrayObject {
 private:
 public:
-  Buffer buffer;
-  VBO(std::vector<Object> objectstospawn);
+  GLuint handle;
+  VertexArrayObject();
+  void Bind();
 };
 
-class EBO {
+class VertexBufferObject {
 private:
 public:
   Buffer buffer;
-  EBO(std::vector<Object> objectospawn);
+  VertexBufferObject(std::vector<Object> &objectstospawn);
+};
+
+class ElementBufferObject {
+private:
+public:
+  Buffer buffer;
+  ElementBufferObject(std::vector<Object> &objectstospawn);
+};
+
+class IndexedRenderer {
+private:
+public:
+  VertexArrayObject VAO;
+  VertexBufferObject VBO;
+  ElementBufferObject EBO;
+  IndexedRenderer(std::vector<Object> &objectstospawn);
 };
 
 }

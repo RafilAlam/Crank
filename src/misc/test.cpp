@@ -25,7 +25,7 @@ std::vector<unsigned int> indices = {
 };
 
 std::string loadShader(std::string fileName) {
-  std::ifstream file(std::string(SHADER_DIR) + "/" + fileName);
+  std::ifstream file("./shaders/" + fileName);
   if (!file) std::cout << "FAILED TO LOAD SHADER: " << fileName << std::endl;
   
   std::string shader;
