@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 #include <cstdlib>
+#include <functional>
+#include <utility>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -29,28 +31,59 @@ private:
   }
 public:
   const GLuint handle;
-  Shader(std::string fileName): handle(glCreateShader());
-}
+  Shader(std::string fileName, GLenum shaderType);
+};
 
 class ShaderProgram {
 private:
 public:
   const GLuint handle;
   ShaderProgram();
-  AttachShader();
-  Link();
-}
+  void AttachShader(Shader shader);
+  void Link();
+};
 
 class Window {
 private:
 public:
-  Window();
-}
+  GLFWwindow* handle;
+  Window(std::string name, int height, int width);
+};
 
-class RenderingPipeline {
+class Object {
 private:
 public:
-  
-}
+  std::vector<float> vertices;
+  std::vector<unsigned int> indices;
+  unsigned long long offsetIndices;
+  unsigned long long baseVertex;
+  Object(std::vector<float> &p_vertices, std::vector<unsigned int> &p_indices);
+  void Draw();
+};
+
+class Buffer {
+private:
+public:
+  GLenum type;
+  GLuint handle;
+  Buffer(GLenum bufferType, std::vector<Object> initialObjects);
+  void Bind();
+  void Data(std::vector<float> &data);
+  void Data(std::vector<unsigned int> &data);
+};
+
+class VBO {
+private:
+public:
+  Buffer buffer;
+  VBO(std::vector<Object> objectstospawn);
+};
+
+class EBO {
+private:
+public:
+  Buffer buffer;
+  EBO(std::vector<Object> objectospawn);
+};
 
 }
