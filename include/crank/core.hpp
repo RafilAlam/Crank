@@ -15,7 +15,7 @@ namespace crank {
 
 class Shader {
 private:
-  const char* fetchShader(std::string fileName) {
+  std::string fetchShader(std::string fileName) {
     std::ifstream file("./shaders/" + fileName);
     if (!file)
       std::cerr << "FAILED TO LOAD SHADER: " << fileName << std::endl;
@@ -23,15 +23,15 @@ private:
     std::string content;
     std::string line;
     while (std::getline(file, line)) {
-      content += line;
+      content += line + '\n';
     }
-    const char* ccontent = content.c_str();
 
-    return ccontent;
+    return content;
   }
 public:
   const GLuint handle;
   Shader(std::string fileName, GLenum shaderType);
+  void Debug(std::string name);
   void Delete();
 };
 
@@ -40,6 +40,7 @@ private:
 public:
   const GLuint handle;
   ShaderProgram();
+  void Debug();
   void AttachShader(Shader &shader);
   void Link();
   void Use();

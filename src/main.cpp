@@ -27,16 +27,17 @@ int main() {
   shaderProgram.AttachShader(fragmentShader);
   shaderProgram.Link();
   shaderProgram.Use();
+  vertexShader.Delete();
+  fragmentShader.Delete();
 
   crank::IndexedRenderer renderer(objects);
-  std::cout << "Ping!" << std::endl;
+  std::cout << "Engine Loaded!" << std::endl;
 
   glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
   while (!glfwWindowShouldClose(window.handle)) {
     glClear(GL_COLOR_BUFFER_BIT);
 
     for (auto& obj : objects) {
-      std::cout << "baseVertex: " << obj.baseVertex << "offsetIndices: " << obj.offsetIndices << std::endl;
       obj.Draw();
     }
 
