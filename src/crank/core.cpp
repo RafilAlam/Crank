@@ -57,6 +57,7 @@ Window::Window(std::string name, int height, int width) {
     std::cerr << "GLFW couldn't start" << std::endl;
     std::exit(EXIT_FAILURE);
   }
+  stbi_set_flip_vertically_on_load(true);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
