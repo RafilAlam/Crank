@@ -12,5 +12,5 @@ add_library(crankengine STATIC ${CRANK_SRC})
 target_include_directories(crankengine PUBLIC include)
 target_link_libraries(crankengine PRIVATE glad glfw)
 
-add_executable(${PROJECT_NAME} src/main.cpp)
+add_executable(${PROJECT_NAME} app/main.cpp)
 target_link_libraries(${PROJECT_NAME} PRIVATE crankengine)
