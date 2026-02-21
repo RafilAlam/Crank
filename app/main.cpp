@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <cmath>
 
 #include <crank/core.hpp>
 
@@ -37,6 +38,8 @@ int main() {
   while (!glfwWindowShouldClose(window.handle)) {
     glClear(GL_COLOR_BUFFER_BIT);
 
+    float green = 0.5*sin(glfwGetTime())+0.5;
+    shaderProgram.SetUniform4f("outColor", 0.0f, green, 0.0f, 1.0f);
     for (auto& obj : objects) {
       obj.Draw();
     }

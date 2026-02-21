@@ -42,6 +42,9 @@ void ShaderProgram::Link() {
 void ShaderProgram::Use() {
   glUseProgram(handle);
 }
+void ShaderProgram::SetUniform4f(std::string name, float x, float y, float z, float w) {
+  glUniform4f(glGetUniformLocation(handle, name.c_str()), x, y, z, w);
+}
 
 Window::Window(std::string name, int height, int width) {
   if (!glfwInit()) {

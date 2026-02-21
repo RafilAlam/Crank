@@ -44,6 +44,7 @@ public:
   void AttachShader(Shader &shader);
   void Link();
   void Use();
+  void SetUniform4f(std::string name, float x, float y, float z, float w);
 };
 
 class Window {
