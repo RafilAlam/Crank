@@ -10,6 +10,7 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <stb/stb_image.h>
 
 namespace crank {
 
@@ -25,6 +26,7 @@ private:
     while (std::getline(file, line)) {
       content += line + '\n';
     }
+    file.close();
 
     return content;
   }
@@ -40,11 +42,13 @@ private:
 public:
   const GLuint handle;
   ShaderProgram();
+  ~ShaderProgram();
   void Debug();
   void AttachShader(Shader &shader);
   void Link();
   void Use();
   void SetUniform4f(std::string name, float x, float y, float z, float w);
+  void SetUniform1i(std::string name, int x);
 };
 
 class Window {
@@ -52,6 +56,7 @@ private:
 public:
   GLFWwindow* handle;
   Window(std::string name, int height, int width);
+  ~Window();
 };
 
 class Object {
@@ -71,6 +76,7 @@ public:
   GLenum type;
   GLuint handle;
   Buffer(GLenum bufferType, std::vector<Object> &initialObjects);
+  ~Buffer();
   void Bind();
   void Data(std::vector<float> &data);
   void Data(std::vector<unsigned int> &data);
@@ -81,6 +87,7 @@ private:
 public:
   GLuint handle;
   VertexArrayObject();
+  ~VertexArrayObject();
   void Bind();
   void SetAttribute(unsigned int attributeIndex, unsigned int n_components, GLenum dataType, GLboolean normalized, GLsizei stride, unsigned long long offset);
 };
@@ -106,6 +113,16 @@ public:
   VertexBufferObject VBO;
   ElementBufferObject EBO;
   IndexedRenderer(std::vector<Object> &objectstospawn);
+};
+
+class Texture {
+private:
+public:
+  GLuint handle;
+  int widthImg, heightImg, numColCh;
+  Texture(std::string fileName);
+  ~Texture();
+  void Bind();
 };
 
 }

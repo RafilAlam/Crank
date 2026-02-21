@@ -8,7 +8,7 @@ add_library(glad STATIC src/glad/glad.c)
 target_include_directories(glad PUBLIC include)
 
 file(GLOB CRANK_SRC "src/crank/*.cpp")
-add_library(crankengine STATIC ${CRANK_SRC})
+add_library(crankengine STATIC ${CRANK_SRC} src/stb/stb_image.cpp)
 target_include_directories(crankengine PUBLIC include)
 target_link_libraries(crankengine PRIVATE glad glfw)
 

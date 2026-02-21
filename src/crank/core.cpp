@@ -23,6 +23,9 @@ void Shader::Delete() {
 }
 
 ShaderProgram::ShaderProgram(): handle(glCreateProgram()) {}
+ShaderProgram::~ShaderProgram() {
+  glDeleteProgram(handle);
+}
 void ShaderProgram::Debug() {
   int success;
   char infoLog[512];
@@ -44,6 +47,9 @@ void ShaderProgram::Use() {
 }
 void ShaderProgram::SetUniform4f(std::string name, float x, float y, float z, float w) {
   glUniform4f(glGetUniformLocation(handle, name.c_str()), x, y, z, w);
+}
+void ShaderProgram::SetUniform1i(std::string name, int x) {
+  glUniform1i(glGetUniformLocation(handle, name.c_str()), x);
 }
 
 Window::Window(std::string name, int height, int width) {
@@ -72,9 +78,15 @@ Window::Window(std::string name, int height, int width) {
   glViewport(0, 0, height, width);
   glfwSetFramebufferSizeCallback(handle, [](GLFWwindow* window, int width, int height) { glViewport(0, 0, width, height); });
 }
+Window::~Window() {
+  glfwDestroyWindow(handle);
+}
 
 Buffer::Buffer(GLenum bufferType, std::vector<Object> &initialObjects): type(bufferType) {
   glGenBuffers(1, &handle);
+}
+Buffer::~Buffer() {
+  glDeleteBuffers(1, &handle);
 }
 void Buffer::Bind() {
   glBindBuffer(type, handle);
@@ -89,6 +101,9 @@ void Buffer::Data(std::vector<unsigned int> &data) {
 VertexArrayObject::VertexArrayObject() {
   glGenVertexArrays(1, &handle);
   glBindVertexArray(handle);
+}
+VertexArrayObject::~VertexArrayObject() {
+  glDeleteVertexArrays(1, &handle);
 }
 void VertexArrayObject::Bind() {
   glBindVertexArray(handle);
@@ -126,6 +141,23 @@ IndexedRenderer::IndexedRenderer(std::vector<Object> &objectstospawn): VAO(), VB
 Object::Object(std::vector<float> &p_vertices, std::vector<unsigned int> &p_indices): vertices(std::move(p_vertices)), indices(std::move(p_indices)) {};
 void Object::Draw() {
   glDrawElementsBaseVertex(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, (void*)offsetIndices, baseVertex);
+}
+
+Texture::Texture(std::string fileName) {
+  unsigned char* bytes = stbi_load(("./textures/" + fileName).c_str(), &widthImg, &heightImg, &numColCh, 0);
+  glGenTextures(1, &handle);
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, handle);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, widthImg, heightImg, 0, GL_RGBA, GL_UNSIGNED_BYTE, bytes);
+  glGenerateMipmap(GL_TEXTURE_2D);
+  stbi_image_free(bytes);
+  glBindTexture(GL_TEXTURE_2D, 0);
+}
+Texture::~Texture() {
+  glDeleteTextures(1, &handle);
+}
+void Texture::Bind() {
+  glBindTexture(GL_TEXTURE_2D, handle);
 }
 
 }
