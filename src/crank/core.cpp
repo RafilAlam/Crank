@@ -93,11 +93,18 @@ VertexArrayObject::VertexArrayObject() {
 void VertexArrayObject::Bind() {
   glBindVertexArray(handle);
 }
+void VertexArrayObject::SetAttribute(unsigned int attributeIndex, unsigned int n_components, GLenum dataType, GLboolean normalized, GLsizei stride, unsigned long long offset) {
+  glVertexAttribPointer(attributeIndex, n_components, dataType, normalized, stride, (void*)offset);
+  glEnableVertexAttribArray(attributeIndex);
+}
 
 VertexBufferObject::VertexBufferObject(std::vector<Object> &objectstospawn): buffer(GL_ARRAY_BUFFER, objectstospawn) {
   std::vector<float> totalvertices;
+  unsigned int vertexcount{0};
   for (auto &obj : objectstospawn) {
-    obj.baseVertex = totalvertices.size()/3;
+    obj.baseVertex = vertexcount;
+    vertexcount += obj.indices.size();
+    std::cout << obj.baseVertex << std::endl;
     totalvertices.insert(totalvertices.end(), obj.vertices.begin(), obj.vertices.end());
   }
   buffer.Bind();
@@ -114,10 +121,7 @@ ElementBufferObject::ElementBufferObject(std::vector<Object> &objectstospawn): b
   buffer.Data(totalindices);
 }
 
-IndexedRenderer::IndexedRenderer(std::vector<Object> &objectstospawn): VAO(), VBO(objectstospawn), EBO(objectstospawn) {
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-  glEnableVertexAttribArray(0);
-}
+IndexedRenderer::IndexedRenderer(std::vector<Object> &objectstospawn): VAO(), VBO(objectstospawn), EBO(objectstospawn) {}
   
 Object::Object(std::vector<float> &p_vertices, std::vector<unsigned int> &p_indices): vertices(std::move(p_vertices)), indices(std::move(p_indices)) {};
 void Object::Draw() {

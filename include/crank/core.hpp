@@ -82,6 +82,7 @@ public:
   GLuint handle;
   VertexArrayObject();
   void Bind();
+  void SetAttribute(unsigned int attributeIndex, unsigned int n_components, GLenum dataType, GLboolean normalized, GLsizei stride, unsigned long long offset);
 };
 
 class VertexBufferObject {
