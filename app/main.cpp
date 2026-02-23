@@ -45,16 +45,17 @@ int main() {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
   crank::Texture texture("brick.png");
-  shaderProgram.SetUniform1i("tex0", 0);
+  GLuint textureLoc = glGetUniformLocation(shaderProgram.handle, "tex0");
+  glUniform1i(textureLoc, 0);
   texture.Bind();
 
-  std::cout << "Engine Loaded!" << std::endl;
-
-  glm::vec4 vec(0.0f, 0.0f, 0.0f, 1.0f);
   glm::mat4 trans(1.0f);
-  trans = glm::translate(trans, glm::vec3(1.0f, 1.0f, 0.0f);
-  vec = trans * vec;
-  std::cout << "translated vector: " << vec.x << vec.y << vec.z << std::endl;
+  trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+  trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
+  GLuint transformLoc = glGetUniformLocation(shaderProgram.handle, "u_Transform");
+  glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
+
+  std::cout << "Engine Loaded!" << std::endl;
 
   glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
   while (!glfwWindowShouldClose(window.handle)) {

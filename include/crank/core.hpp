@@ -10,6 +10,9 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <stb/stb_image.h>
 
 namespace crank {
@@ -47,8 +50,6 @@ public:
   void AttachShader(Shader &shader);
   void Link();
   void Use();
-  void SetUniform4f(std::string name, float x, float y, float z, float w);
-  void SetUniform1i(std::string name, int x);
 };
 
 class Window {
