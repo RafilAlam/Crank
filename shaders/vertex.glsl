@@ -6,6 +6,8 @@ layout (location = 2) in vec2 aTexCoords;
 out vec3 vColor;
 out vec2 vTexCoords;
 
+uniform vec4 u_ModelMatrix;
+
 void main()
 {
   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
