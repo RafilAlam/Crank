@@ -3,7 +3,6 @@
 #include <cmath>
 
 #include <crank/core.hpp>
-#include <crank/math.hpp>
 
 std::vector<float> vertices = {
   // positions          // colors           // texture coords
@@ -50,6 +49,12 @@ int main() {
   texture.Bind();
 
   std::cout << "Engine Loaded!" << std::endl;
+
+  glm::vec4 vec(0.0f, 0.0f, 0.0f, 1.0f);
+  glm::mat4 trans(1.0f);
+  trans = glm::translate(trans, glm::vec3(1.0f, 1.0f, 0.0f);
+  vec = trans * vec;
+  std::cout << "translated vector: " << vec.x << vec.y << vec.z << std::endl;
 
   glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
   while (!glfwWindowShouldClose(window.handle)) {
