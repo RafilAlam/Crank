@@ -52,8 +52,14 @@ int main() {
   glVertexArrayAttribFormat(vao, 0, 3, GL_FLOAT, GL_FALSE, 0);
   glVertexArrayAttribBinding(vao, 0, 0);
 
-  const char* c_vshader = load_file_content("./shaders/vertex.glsl");
-  const char* c_fshader = load_file_content("./shaders/fragment.glsl");
+  std::string s_vshader = load_file_content("./shaders/vertex.glsl");
+  std::string s_fshader = load_file_content("./shaders/fragment.glsl");
+
+  const char* c_vshader = s_vshader.c_str();
+  const char* c_fshader = s_fshader.c_str();
+
+  std::cout << "Loaded Vertex Shader:\n" << c_vshader << "\nLoaded Fragment Shader:\n" << c_fshader << std::endl;
+
   GLuint vertexshader = glCreateShader(GL_VERTEX_SHADER);
   glShaderSource(vertexshader, 1, &c_vshader, NULL);
   GLuint fragmentshader = glCreateShader(GL_FRAGMENT_SHADER);
