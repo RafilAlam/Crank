@@ -15,6 +15,17 @@ std::string load_file_content(const std::string &fileName) {
   return content;
 }
 
+void debug_shader(std::string shaderName, GLuint shader) {
+  GLint shader_compiled;
+  glGetShaderiv(shader, GL_COMPILE_STATUS, &shader_compiled);
+  if (!shader_compiled) {
+    GLsizei log_length{0};
+    GLchar message[1024];
+    glGetShaderInfoLog(shader, 1024, &log_length, message);
+    std::cout << "SHADER COMPILATION ERROR(" + shaderName + "):\n" + message << std::endl;
+  }
+}
+
 namespace crank {
 
 

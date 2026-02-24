@@ -67,6 +67,9 @@ int main() {
   glCompileShader(vertexshader);
   glCompileShader(fragmentshader);
 
+  debug_shader("VERTEX", vertexshader);
+  debug_shader("FRAGMENT", fragmentshader);
+
   GLuint program = glCreateProgram();
   glAttachShader(program, vertexshader);
   glAttachShader(program, fragmentshader);
