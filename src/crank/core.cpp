@@ -110,7 +110,7 @@ Renderer2D::Renderer2D(Window &window, std::vector<float> &vertices, std::vector
 void Renderer2D::RenderStep() {
   glUseProgram(program);
   glBindVertexArray(VAO);
-  glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, NULL); // TODO:replace 3 with numVertices in obj
+  glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL); // TODO:replace 3 with numVertices in obj
 }
 
 void Renderer2D::Run() {
