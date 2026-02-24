@@ -5,69 +5,79 @@
 #include <crank/core.hpp>
 
 std::vector<float> vertices = {
-  // positions          // colors           // texture coords
-  -0.5f, -0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   0.0f, 0.0f,
-  -0.5f,  0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   0.0f, 1.0f,
-   0.5f,  0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   1.0f, 1.0f,
-   0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 0.0f,   1.0f, 0.0f,
+  -0.5f, -0.5f, 0.0f,
+   0.0f,  0.5f, 0.0f,
+   0.5f, -0.5f, 0.0f,
 };
 
-std::vector<unsigned int> indices = {
+std::vector<uint32_t> indices = {
   0, 1, 2,
-  0, 3, 2,
 };
 
 int main() {
-  crank::Window window("Crank", 800, 600);
+  glfwInit();
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-  std::vector<crank::Object> objects;
-  objects.emplace_back(vertices, indices);
+  GLFWwindow* window = glfwCreateWindow(800, 600, "MyWindow", NULL, NULL);
+  if (!window) {
+    std::cout << "Failed to create GLFW window" << std::endl;
+    glfwTerminate();
+    return -1;
+  }
+  glfwMakeContextCurrent(window);
 
-  crank::Shader vertexShader("vertex.glsl", GL_VERTEX_SHADER);
-  crank::Shader fragmentShader("fragment.glsl", GL_FRAGMENT_SHADER);
+  if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+      std::cout << "Failed to start GLAD" << std::endl;
+      glfwTerminate();
+      return -1;
+  }
+  glViewport(0, 0, 800, 600);
+  glfwSetFramebufferSizeCallback(window, [](GLFWwindow* window, int width, int height) {
+      glViewport(0, 0, width, height); 
+  });
 
-  crank::ShaderProgram shaderProgram;
-  shaderProgram.AttachShader(vertexShader);
-  shaderProgram.AttachShader(fragmentShader);
-  shaderProgram.Link();
-  shaderProgram.Use();
-  vertexShader.Delete();
-  fragmentShader.Delete();
+  GLuint vao, vbo, ebo;
+  glCreateBuffers(1, &vbo);
+  glNamedBufferStorage(vbo, sizeof(float)*vertices.size(), vertices.data(), GL_DYNAMIC_STORAGE_BIT);
 
-  crank::IndexedRenderer renderer(objects);
-  renderer.VAO.SetAttribute(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), 0);
-  renderer.VAO.SetAttribute(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), 3 * sizeof(float));
-  renderer.VAO.SetAttribute(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), 6 * sizeof(float));
+  glCreateBuffers(1, &ebo);
+  glNamedBufferStorage(ebo, sizeof(uint32_t)*indices.size(), indices.data(), GL_DYNAMIC_STORAGE_BIT);
 
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glCreateVertexArrays(1, &vao);
+  glVertexArrayVertexBuffer(vao, 0, vbo, 0, 3*sizeof(float));
+  glVertexArrayElementBuffer(vao, ebo);
+  glEnableVertexArrayAttrib(vao, 0);
+  glVertexArrayAttribFormat(vao, 0, 3, GL_FLOAT, GL_FALSE, 0);
+  glVertexArrayAttribBinding(vao, 0, 0);
 
-  crank::Texture texture("brick.png");
-  GLuint textureLoc = glGetUniformLocation(shaderProgram.handle, "tex0");
-  glUniform1i(textureLoc, 0);
-  texture.Bind();
+  const char* c_vshader = load_file_content("./shaders/vertex.glsl");
+  const char* c_fshader = load_file_content("./shaders/fragment.glsl");
+  GLuint vertexshader = glCreateShader(GL_VERTEX_SHADER);
+  glShaderSource(vertexshader, 1, &c_vshader, NULL);
+  GLuint fragmentshader = glCreateShader(GL_FRAGMENT_SHADER);
+  glShaderSource(fragmentshader, 1, &c_fshader, NULL);
+  glCompileShader(vertexshader);
+  glCompileShader(fragmentshader);
 
-  glm::mat4 trans(1.0f);
-  trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
-  trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-  GLuint transformLoc = glGetUniformLocation(shaderProgram.handle, "u_Transform");
-  glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
+  GLuint program = glCreateProgram();
+  glAttachShader(program, vertexshader);
+  glAttachShader(program, fragmentshader);
+  glLinkProgram(program);
 
-  std::cout << "Engine Loaded!" << std::endl;
-
-  glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-  while (!glfwWindowShouldClose(window.handle)) {
+  while(!glfwWindowShouldClose(window)) {
     glClear(GL_COLOR_BUFFER_BIT);
 
-    for (auto& obj : objects) {
-      obj.Draw();
-    }
+    glUseProgram(program);
+    glBindVertexArray(vao);
+    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, NULL);
 
-    glfwSwapBuffers(window.handle);
+    glfwSwapBuffers(window);
     glfwPollEvents();
   }
+
+  glfwDestroyWindow(window);
   glfwTerminate();
   return 0;
-}
+};
