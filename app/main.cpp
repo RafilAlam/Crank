@@ -50,8 +50,8 @@ int main() {
   texture.Bind();
 
   glm::mat4 trans(1.0f);
-  trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
   trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
+  trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
   GLuint transformLoc = glGetUniformLocation(shaderProgram.handle, "u_Transform");
   glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
 
