@@ -65,7 +65,7 @@ Window::Window(std::string name, int p_width, int p_height): width(p_width), hei
   });
 }
 
-Renderer2D::Renderer2D(Window window, std::vector<float> vertices, std::vector<uint32_t> indices): window(window) {
+Renderer2D::Renderer2D(Window &window, std::vector<float> &vertices, std::vector<uint32_t> &indices): window(window) {
   glCreateBuffers(1, &VBO);
   glNamedBufferStorage(VBO, sizeof(float)*vertices.size(), vertices.data(), GL_DYNAMIC_STORAGE_BIT);
 
@@ -123,6 +123,7 @@ void Renderer2D::Run() {
     glfwSwapBuffers(window.handle);
     glfwPollEvents;
   }
+  glfwTerminate();
 }
 
 }

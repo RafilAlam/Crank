@@ -29,7 +29,7 @@ private:
 public:
   GLuint VAO, VBO, EBO, program;
   Window window;
-  Renderer2D(Window window, std::vector<float> vertices, std::vector<uint32_t> indices);
+  Renderer2D(Window &window, std::vector<float> &vertices, std::vector<uint32_t> &indices);
   std::function<void()> PreRenderStep = [](){};
   void RenderStep();
   void Run();
