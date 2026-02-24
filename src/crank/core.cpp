@@ -121,7 +121,7 @@ void Renderer2D::Run() {
     RenderStep();
 
     glfwSwapBuffers(window.handle);
-    glfwPollEvents;
+    glfwPollEvents();
   }
   glfwTerminate();
 }
