@@ -99,11 +99,14 @@ Renderer2D::Renderer2D(Window &window): window(window) {
   debug_program("PROGRAM", program);
   glDeleteShader(vertexshader);
   glDeleteShader(fragmentshader);
+
+  u_model = glGetUniformLocation(program, "u_model");
 }
 
 void Renderer2D::RenderStep() {
   glUseProgram(program);
   for (auto &pair : Objects) {
+    glUniformMatrix4fv(u_model, 1, GL_FALSE, glm::value_ptr(pair.second.transform.GetMatrix()));
     pair.second.Draw();
   }
 }

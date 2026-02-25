@@ -8,6 +8,9 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 std::string load_file_content(const std::string &fileName);
 void debug_shader(std::string shaderName, GLuint shader);
@@ -27,20 +30,40 @@ public:
 
 class Object {
 private:
+  struct Transform {
+    glm::vec3 position = glm::vec3(0.0f);
+    glm::vec3 rotation = glm::vec3(0.0f);
+    glm::vec3 scale    = glm::vec3(1.0f);
+
+    glm::mat4 GetMatrix() {
+      glm::mat4 model(1.0f);
+      model = glm::translate(model, position);
+      model = glm::rotate(model, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+      model = glm::rotate(model, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+      model = glm::rotate(model, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+      model = glm::scale(model, scale);
+      return model;
+    }
+  };
 public:
   GLuint VAO, VBO, EBO, program;
   std::vector<float> vertices;
   std::vector<uint32_t> indices;
+  Transform transform;
+
   Object(std::vector<float> &vertices, std::vector<uint32_t> &indices);
   void Draw();
+  void Move();
 };
 
 class Renderer2D {
 private:
-public:
-  GLuint VAO, VBO, EBO, program;
-  Window window;
   std::unordered_map<std::string, Object> Objects;
+  GLuint VAO, VBO, EBO, program;
+  GLint u_model;
+  Window window;
+
+public:
   Renderer2D(Window &window);
 
   std::function<void()> PreRenderStep = [](){};
