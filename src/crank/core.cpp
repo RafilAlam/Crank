@@ -65,19 +65,13 @@ Window::Window(std::string name, int p_width, int p_height): width(p_width), hei
   });
 }
 
-Renderer2D::Renderer2D(Window &window, std::vector<float> &vertices, std::vector<uint32_t> &indices): window(window) {
-  glCreateBuffers(1, &VBO);
-  glNamedBufferStorage(VBO, sizeof(float)*vertices.size(), vertices.data(), GL_DYNAMIC_STORAGE_BIT);
+Object::Object(std::vector<float> &p_vertices, std::vector<uint32_t> &p_indices): vertices(p_vertices), indices(p_indices) {};
+void Object::Draw() {
+  glBindVertexArray(VAO);
+  glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, NULL); 
+}
 
-  glCreateBuffers(1, &EBO);
-  glNamedBufferStorage(EBO, sizeof(uint32_t)*indices.size(), indices.data(), GL_DYNAMIC_STORAGE_BIT);
-
-  glCreateVertexArrays(1, &VAO);
-  glVertexArrayVertexBuffer(VAO, 0, VBO, 0, 3*sizeof(float));
-  glVertexArrayElementBuffer(VAO, EBO);
-  glEnableVertexArrayAttrib(VAO, 0);
-  glVertexArrayAttribFormat(VAO, 0, 3, GL_FLOAT, GL_FALSE, 0);
-  glVertexArrayAttribBinding(VAO, 0, 0);
+Renderer2D::Renderer2D(Window &window): window(window) {
 
   std::string s_vshader = load_file_content("./shaders/vertex.glsl");
   std::string s_fshader = load_file_content("./shaders/fragment.glsl");
@@ -109,8 +103,9 @@ Renderer2D::Renderer2D(Window &window, std::vector<float> &vertices, std::vector
 
 void Renderer2D::RenderStep() {
   glUseProgram(program);
-  glBindVertexArray(VAO);
-  glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL); // TODO:replace 3 with numVertices in obj
+  for (auto &pair : Objects) {
+    pair.second.Draw();
+  }
 }
 
 void Renderer2D::Run() {
@@ -126,8 +121,22 @@ void Renderer2D::Run() {
   glfwTerminate();
 }
 
-Object::Object() {
+void Renderer2D::Create(std::string name, std::vector<float> &vertices, std::vector<uint32_t> &indices) {
+  auto[it, inserted] = Objects.try_emplace(std::move(name), vertices, indices);
+  Object &obj = it->second;
 
+  glCreateBuffers(1, &obj.VBO);
+  glNamedBufferStorage(obj.VBO, sizeof(float)*vertices.size(), vertices.data(), GL_DYNAMIC_STORAGE_BIT);
+
+  glCreateBuffers(1, &obj.EBO);
+  glNamedBufferStorage(obj.EBO, sizeof(uint32_t)*indices.size(), indices.data(), GL_DYNAMIC_STORAGE_BIT);
+
+  glCreateVertexArrays(1, &obj.VAO);
+  glVertexArrayVertexBuffer(obj.VAO, 0, obj.VBO, 0, 3*sizeof(float));
+  glVertexArrayElementBuffer(obj.VAO, obj.EBO);
+  glEnableVertexArrayAttrib(obj.VAO, 0);
+  glVertexArrayAttribFormat(obj.VAO, 0, 3, GL_FLOAT, GL_FALSE, 0);
+  glVertexArrayAttribBinding(obj.VAO, 0, 0);
 }
 
 }

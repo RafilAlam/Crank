@@ -4,6 +4,7 @@
 #include <fstream>
 #include <cstdlib>
 #include <functional>
+#include <unordered_map>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -24,22 +25,29 @@ public:
   Window(std::string name, int p_width, int p_height);
 };
 
+class Object {
+private:
+public:
+  GLuint VAO, VBO, EBO, program;
+  std::vector<float> vertices;
+  std::vector<uint32_t> indices;
+  Object(std::vector<float> &vertices, std::vector<uint32_t> &indices);
+  void Draw();
+};
+
 class Renderer2D {
 private:
 public:
   GLuint VAO, VBO, EBO, program;
   Window window;
-  Renderer2D(Window &window, std::vector<float> &vertices, std::vector<uint32_t> &indices);
+  std::unordered_map<std::string, Object> Objects;
+  Renderer2D(Window &window);
+
   std::function<void()> PreRenderStep = [](){};
   void RenderStep();
   void Run();
-};
 
-class Object {
-private:
-public:
-  GLuint VAO, VBO, EBO, program;
-  Object();
+  void Create(std::string name, std::vector<float> &vertices, std::vector<uint32_t> &indices);
 };
 
 }
