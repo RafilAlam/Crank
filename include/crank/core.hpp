@@ -58,7 +58,6 @@ public:
 
 class Renderer2D {
 private:
-  std::unordered_map<std::string, Object> Objects;
   GLuint VAO, VBO, EBO, program;
   GLint u_model;
   Window window;
@@ -66,6 +65,7 @@ private:
 public:
   Renderer2D(Window &window);
 
+  std::unordered_map<std::string, Object> Objects;
   std::function<void()> PreRenderStep = [](){};
   void RenderStep();
   void Run();
