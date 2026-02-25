@@ -126,4 +126,8 @@ void Renderer2D::Run() {
   glfwTerminate();
 }
 
+Object::Object() {
+
+}
+
 }

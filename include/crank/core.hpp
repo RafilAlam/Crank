@@ -35,4 +35,11 @@ public:
   void Run();
 };
 
+class Object {
+private:
+public:
+  GLuint VAO, VBO, EBO, program;
+  Object();
+};
+
 }
