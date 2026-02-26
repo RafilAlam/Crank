@@ -2,6 +2,7 @@
 #include <vector>
 
 #include <crank/core.hpp>
+using namespace crank;
 
 std::vector<float> vertices = {
   -0.5f, -0.5f, 0.0f,
@@ -18,19 +19,21 @@ std::vector<uint32_t> indices = {
 int frames{0};
 
 int main() {
-  crank::Window Window("Crank", 800, 600);
-  crank::Renderer2D Renderer(Window);
-  Renderer.Create("Rectangle1", vertices, indices);
-  Renderer.Create("Rectangle2", vertices, indices);
+  Window Window("Crank", 800, 600);
+  Renderer2D Renderer(Window);
+  Object& rect1 = Renderer.Create("Rectangle1", vertices, indices);
+  Object& rect2 = Renderer.Create("Rectangle2", vertices, indices);
 
-  Renderer.Objects.at("Rectangle1").transform.position = glm::vec3(-0.5f,  0.5f, 0.0f);
-  Renderer.Objects.at("Rectangle2").transform.position = glm::vec3( 0.5f, -0.5f, 0.0f);
+  rect1.transform.position = glm::vec3(-0.5f,  0.5f, 0.0f);
+  rect1.transform.scale = glm::vec3(0.5f, 0.5f, 0.5f);
+  rect2.transform.position = glm::vec3( 0.5f, -0.5f, 0.0f);
+  rect2.transform.scale = glm::vec3(0.5f, 0.5f, 0.5f);
 
   Window.Keybind(GLFW_KEY_E, []() { std::cout << "KEY 'E' PRESSED!" << std::endl; });
 
-  Renderer.PreRenderStep = []() {
-    ++frames;
-    std::cout << '\r' << "FRAME COUNT: " << frames << std::flush;
+  Renderer.PreRenderStep = [&]() {
+    rect1.transform.rotation.z += 0.01;
+    rect2.transform.rotation.z -= 0.01;
   };
 
   Renderer.Run();

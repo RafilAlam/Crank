@@ -136,8 +136,8 @@ void Renderer2D::Run() {
   glfwTerminate();
 }
 
-void Renderer2D::Create(std::string name, std::vector<float> &vertices, std::vector<uint32_t> &indices) {
-  auto[it, inserted] = Objects.try_emplace(std::move(name), vertices, indices);
+Object& Renderer2D::Create(std::string name, std::vector<float> &vertices, std::vector<uint32_t> &indices) {
+  auto&& [it, inserted] = Objects.try_emplace(std::move(name), vertices, indices);
   Object &obj = it->second;
 
   glCreateBuffers(1, &obj.VBO);
@@ -152,6 +152,8 @@ void Renderer2D::Create(std::string name, std::vector<float> &vertices, std::vec
   glEnableVertexArrayAttrib(obj.VAO, 0);
   glVertexArrayAttribFormat(obj.VAO, 0, 3, GL_FLOAT, GL_FALSE, 0);
   glVertexArrayAttribBinding(obj.VAO, 0, 0);
+
+  return obj;
 }
 
 }

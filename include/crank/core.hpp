@@ -72,7 +72,7 @@ public:
   void RenderStep();
   void Run();
 
-  void Create(std::string name, std::vector<float> &vertices, std::vector<uint32_t> &indices);
+  Object& Create(std::string name, std::vector<float> &vertices, std::vector<uint32_t> &indices);
 };
 
 }
