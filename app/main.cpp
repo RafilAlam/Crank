@@ -26,6 +26,8 @@ int main() {
   Renderer.Objects.at("Rectangle1").transform.position = glm::vec3(-0.5f,  0.5f, 0.0f);
   Renderer.Objects.at("Rectangle2").transform.position = glm::vec3( 0.5f, -0.5f, 0.0f);
 
+  Window.Keybind(GLFW_KEY_E, []() { std::cout << "KEY 'E' PRESSED!" << std::endl; });
+
   Renderer.PreRenderStep = []() {
     ++frames;
     std::cout << '\r' << "FRAME COUNT: " << frames << std::flush;

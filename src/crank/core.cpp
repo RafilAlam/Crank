@@ -55,6 +55,14 @@ Window::Window(std::string name, int p_width, int p_height): width(p_width), hei
   }
   glfwMakeContextCurrent(handle);
 
+  glfwSetWindowUserPointer(handle, this);
+  glfwSetKeyCallback(handle, [](GLFWwindow* handle, int key, int scancode, int action, int mods) {
+    Window* window = static_cast<Window*>(glfwGetWindowUserPointer(handle));
+    if (action == GLFW_PRESS and window->keybinds.count(key) > 0) {
+      window->keybinds.at(key)();
+    }
+  });
+
   if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
     glfwTerminate();
     error("FAILED TO START GLAD!");
@@ -63,6 +71,10 @@ Window::Window(std::string name, int p_width, int p_height): width(p_width), hei
   glfwSetFramebufferSizeCallback(handle, [](GLFWwindow* window, int f_width, int f_height) {
     glViewport(0, 0, f_width, f_height);
   });
+}
+
+void Window::Keybind(int key, std::function<void()> callback) {
+  keybinds.insert_or_assign(key, callback);
 }
 
 Object::Object(std::vector<float> &p_vertices, std::vector<uint32_t> &p_indices): vertices(p_vertices), indices(p_indices) {};

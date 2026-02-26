@@ -22,10 +22,12 @@ void error(std::string msg);
 
 class Window {
 private:
+  std::unordered_map<int, std::function<void()>> keybinds;
 public:
   int width, height;
   GLFWwindow* handle;
   Window(std::string name, int p_width, int p_height);
+  void Keybind(int key, std::function<void()> callback); // key is GLFW key tokens
 };
 
 class Object {
