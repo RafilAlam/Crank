@@ -42,7 +42,7 @@ void error(std::string msg) {
   std::exit(EXIT_FAILURE);
 }
 
-Window::Window(std::string name, int p_width, int p_height): width(p_width), height(p_height) {
+Window::Window(std::string name, int width, int height) {
   if (!glfwInit()) error("GLFW INITIALISATION FAILED!");
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
@@ -68,19 +68,77 @@ Window::Window(std::string name, int p_width, int p_height): width(p_width), hei
     error("FAILED TO START GLAD!");
   }
   glViewport(0, 0, width, height);
-  glfwSetFramebufferSizeCallback(handle, [](GLFWwindow* window, int f_width, int f_height) {
-    glViewport(0, 0, f_width, f_height);
-  });
 }
-
 void Window::Keybind(int key, std::function<void()> callback) {
   keybinds.insert_or_assign(key, callback);
 }
+glm::vec2 Window::getResolution() {
+  int w, h;
+  glfwGetFramebufferSize(handle, &w, &h);
+  return glm::vec2(w, h);
+}
 
-Object::Object(std::vector<float> &p_vertices, std::vector<uint32_t> &p_indices): vertices(p_vertices), indices(p_indices) {};
+Mesh::Mesh(std::vector<float> &p_vertices, std::vector<uint32_t> &p_indices, MESH_TYPE p_type): vertices(p_vertices), indices(p_indices), type(p_type) {}
+float* Mesh::getVertices() { return vertices.data(); }
+uint32_t* Mesh::getIndices() { return indices.data(); }
+size_t Mesh::numVertices() { return vertices.size(); }
+size_t Mesh::numIndices() { return indices.size(); }
+Mesh Mesh::Raw(std::vector<float> p_vertices, std::vector<uint32_t> p_indices) {
+  return Mesh(p_vertices, p_indices, M_MODEL);
+}
+Mesh Mesh::Rectangle(float width, float height) {
+  float x = width/2;
+  float y = height/2;
+  std::vector<float> vertices = {
+    -x, -y, 0.0f,
+     x, -y, 0.0f,
+     x,  y, 0.0f,
+    -x,  y, 0.0f,
+  };
+
+  std::vector<uint32_t> indices = {
+    0, 1, 2,
+    2, 3, 0,
+  };
+
+  return Mesh(vertices, indices, M_RECT);
+}
+Mesh Mesh::Triangle(float base, float height) {
+  float x = base/2;
+  float y = height/2;
+  std::vector<float> vertices = {
+    -x, -y, 0.0f,
+     x, -y, 0.0f,
+     0,  y, 0.0f,
+  };
+  std::vector<uint32_t> indices = {
+    0, 1, 2
+  };
+
+  return Mesh(vertices, indices, M_TRI);
+}
+Mesh Mesh::Circle(float radius) {
+  float x = radius;
+  float y = radius;
+  std::vector<float> vertices = {
+    -x, -y, 0.0f,
+     x, -y, 0.0f,
+     x,  y, 0.0f,
+    -x,  y, 0.0f,
+  };
+
+  std::vector<uint32_t> indices = {
+    0, 1, 2,
+    2, 3, 0,
+  };
+
+  return Mesh(vertices, indices, M_CIR);
+}
+
+Object::Object(Mesh &&p_mesh): mesh(p_mesh) {};
 void Object::Draw() {
   glBindVertexArray(VAO);
-  glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, NULL); 
+  glDrawElements(GL_TRIANGLES, mesh.numIndices(), GL_UNSIGNED_INT, NULL); 
 }
 
 Renderer2D::Renderer2D(Window &window): window(window) {
@@ -90,8 +148,6 @@ Renderer2D::Renderer2D(Window &window): window(window) {
 
   const char* c_vshader = s_vshader.c_str();
   const char* c_fshader = s_fshader.c_str();
-
-  std::cout << "Loaded Vertex Shader:\n" << c_vshader << "\nLoaded Fragment Shader:\n" << c_fshader << std::endl;
 
   GLuint vertexshader = glCreateShader(GL_VERTEX_SHADER);
   glShaderSource(vertexshader, 1, &c_vshader, NULL);
@@ -113,12 +169,26 @@ Renderer2D::Renderer2D(Window &window): window(window) {
   glDeleteShader(fragmentshader);
 
   u_model = glGetUniformLocation(program, "u_model");
+  u_modelposition = glGetUniformLocation(program, "u_modelposition");
+  u_meshtype = glGetUniformLocation(program, "u_meshtype");
+  u_resolution = glGetUniformLocation(program, "u_resolution");
+  u_circleradius = glGetUniformLocation(program, "u_circleradius");
+  
+  glfwSetFramebufferSizeCallback(window.handle, [](GLFWwindow* window, int f_width, int f_height) {
+    glViewport(0, 0, f_width, f_height);
+  });
 }
 
 void Renderer2D::RenderStep() {
   glUseProgram(program);
   for (auto &pair : Objects) {
     glUniformMatrix4fv(u_model, 1, GL_FALSE, glm::value_ptr(pair.second.transform.GetMatrix()));
+    glUniform2f(u_modelposition, pair.second.transform.position.x, pair.second.transform.position.y);
+    glUniform1i(u_meshtype, pair.second.mesh.type);
+    glm::vec2 res = window.getResolution();
+    glUniform2f(u_resolution, res.x, res.y);
+    if (pair.second.mesh.type == M_CIR) 
+      glUniform1f(u_circleradius, pair.second.transform.scale.x/2);
     pair.second.Draw();
   }
 }
@@ -136,15 +206,15 @@ void Renderer2D::Run() {
   glfwTerminate();
 }
 
-Object& Renderer2D::Create(std::string name, std::vector<float> &vertices, std::vector<uint32_t> &indices) {
-  auto&& [it, inserted] = Objects.try_emplace(std::move(name), vertices, indices);
+Object& Renderer2D::Create(std::string name, Mesh p_mesh) {
+  auto&& [it, inserted] = Objects.try_emplace(std::move(name), std::move(p_mesh));
   Object &obj = it->second;
 
   glCreateBuffers(1, &obj.VBO);
-  glNamedBufferStorage(obj.VBO, sizeof(float)*vertices.size(), vertices.data(), GL_DYNAMIC_STORAGE_BIT);
+  glNamedBufferStorage(obj.VBO, sizeof(float)*obj.mesh.numVertices(), obj.mesh.getVertices(), GL_DYNAMIC_STORAGE_BIT);
 
   glCreateBuffers(1, &obj.EBO);
-  glNamedBufferStorage(obj.EBO, sizeof(uint32_t)*indices.size(), indices.data(), GL_DYNAMIC_STORAGE_BIT);
+  glNamedBufferStorage(obj.EBO, sizeof(uint32_t)*obj.mesh.numIndices(), obj.mesh.getIndices(), GL_DYNAMIC_STORAGE_BIT);
 
   glCreateVertexArrays(1, &obj.VAO);
   glVertexArrayVertexBuffer(obj.VAO, 0, obj.VBO, 0, 3*sizeof(float));

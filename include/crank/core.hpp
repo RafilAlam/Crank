@@ -5,6 +5,8 @@
 #include <cstdlib>
 #include <functional>
 #include <unordered_map>
+#include <utility>
+#include <math.h>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -24,10 +26,34 @@ class Window {
 private:
   std::unordered_map<int, std::function<void()>> keybinds;
 public:
-  int width, height;
   GLFWwindow* handle;
-  Window(std::string name, int p_width, int p_height);
+  Window(std::string name, int width, int height);
   void Keybind(int key, std::function<void()> callback); // key is GLFW key tokens
+  glm::vec2 getResolution();
+};
+
+enum MESH_TYPE {
+  M_MODEL,
+  M_RECT,
+  M_TRI,
+  M_CIR
+};
+
+class Mesh {
+private:
+  std::vector<float> vertices;
+  std::vector<uint32_t> indices;
+  Mesh(std::vector<float> &p_vertices, std::vector<uint32_t> &p_indices, MESH_TYPE p_type);
+public:
+  MESH_TYPE type;
+  float* getVertices();
+  uint32_t* getIndices();
+  size_t numVertices();
+  size_t numIndices();
+  static Mesh Raw(std::vector<float> p_vertices, std::vector<uint32_t> p_indices);
+  static Mesh Rectangle(float width, float height);
+  static Mesh Triangle(float base, float height);
+  static Mesh Circle(float radius);
 };
 
 class Object {
@@ -49,22 +75,21 @@ private:
   };
 public:
   GLuint VAO, VBO, EBO, program;
-  std::vector<float> vertices;
-  std::vector<uint32_t> indices;
   Transform transform;
+  Mesh mesh;
 
-  Object(std::vector<float> &vertices, std::vector<uint32_t> &indices);
+  Object(Mesh &&p_mesh);
   void Draw();
-  void Move();
 };
 
 class Renderer2D {
 private:
   GLuint VAO, VBO, EBO, program;
   GLint u_model;
-  Window window;
+  GLint u_modelposition, u_meshtype, u_resolution, u_circleradius;
 
 public:
+  Window window;
   Renderer2D(Window &window);
 
   std::unordered_map<std::string, Object> Objects;
@@ -72,7 +97,7 @@ public:
   void RenderStep();
   void Run();
 
-  Object& Create(std::string name, std::vector<float> &vertices, std::vector<uint32_t> &indices);
+  Object& Create(std::string name, Mesh p_mesh);
 };
 
 }
