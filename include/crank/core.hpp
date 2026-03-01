@@ -22,11 +22,14 @@ namespace crank {
 
 void error(std::string msg);
 
+struct WindowData;
+
 class Window {
 private:
   std::unordered_map<int, std::function<void()>> keybinds;
 public:
   GLFWwindow* handle;
+  WindowData* dataptr;
   Window(std::string name, int width, int height);
   void Keybind(int key, std::function<void()> callback); // key is GLFW key tokens
   glm::vec2 getResolution();
@@ -86,9 +89,8 @@ public:
 class Renderer2D {
 private:
   GLuint VAO, VBO, EBO, program;
-  GLint u_model;
+  GLint u_projection, u_model;
   GLint u_modelposition, u_meshtype, u_resolution, u_circleradius;
-
 public:
   Window window;
   Renderer2D(Window &window);
@@ -99,6 +101,11 @@ public:
   void Run();
 
   Object& Create(std::string name, Mesh p_mesh);
+};
+
+struct WindowData {
+  Window* window;
+  Renderer2D* renderer;
 };
 
 }

@@ -54,12 +54,13 @@ Window::Window(std::string name, int width, int height) {
     error("WINDOW CREATION FAILED!");
   }
   glfwMakeContextCurrent(handle);
-
-  glfwSetWindowUserPointer(handle, this);
+  
+  dataptr = new WindowData{this, NULL};
+  glfwSetWindowUserPointer(handle, &dataptr);
   glfwSetKeyCallback(handle, [](GLFWwindow* handle, int key, int scancode, int action, int mods) {
-    Window* window = static_cast<Window*>(glfwGetWindowUserPointer(handle));
-    if (action == GLFW_PRESS and window->keybinds.count(key) > 0) {
-      window->keybinds.at(key)();
+    WindowData* dataptr = static_cast<WindowData*>(glfwGetWindowUserPointer(handle));
+    if (action == GLFW_PRESS and dataptr->window->keybinds.count(key) > 0) {
+      dataptr->window->keybinds.at(key)();
     }
   });
 
@@ -74,6 +75,7 @@ void Window::Keybind(int key, std::function<void()> callback) {
 }
 glm::vec2 Window::getResolution() {
   int w, h;
+  if (!handle) error("WINDOW MISSING!");
   glfwGetFramebufferSize(handle, &w, &h);
   return glm::vec2(w, h);
 }
@@ -167,15 +169,27 @@ Renderer2D::Renderer2D(Window &window): window(window) {
   debug_program("PROGRAM", program);
   glDeleteShader(vertexshader);
   glDeleteShader(fragmentshader);
+  glUseProgram(program);
 
+  u_projection = glGetUniformLocation(program, "u_projection");
   u_model = glGetUniformLocation(program, "u_model");
   u_modelposition = glGetUniformLocation(program, "u_modelposition");
   u_meshtype = glGetUniformLocation(program, "u_meshtype");
   u_resolution = glGetUniformLocation(program, "u_resolution");
   u_circleradius = glGetUniformLocation(program, "u_circleradius");
   
+  glm::vec2 res = window.getResolution();
+  glm::mat4 projection = glm::ortho(0.0f, (float)res.x, 0.0f, (float)res.y, -1.0f, 1.0f);
+  glUniformMatrix4fv(u_projection, 1, GL_FALSE, glm::value_ptr(projection));
+
+  window.dataptr->renderer = this;
+
   glfwSetFramebufferSizeCallback(window.handle, [](GLFWwindow* window, int f_width, int f_height) {
+    WindowData* dataptr = static_cast<WindowData*>(glfwGetWindowUserPointer(window));
     glViewport(0, 0, f_width, f_height);
+    glm::vec2 res = dataptr->window->getResolution();
+    glm::mat4 projection = glm::ortho(0.0f, (float)res.x, 0.0f, (float)res.y, -1.0f, 1.0f);
+    glUniformMatrix4fv(dataptr->renderer->u_projection, 1, GL_FALSE, glm::value_ptr(projection));
   });
 }
 
