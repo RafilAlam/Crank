@@ -12,7 +12,7 @@ int main() {
   Object& circle = Renderer.Create("Circle1", Mesh::Circle(0.25));
   Object& triangle = Renderer.Create("Triangle2", Mesh::Triangle(0.5, 0.5));
 
-//circle.transform.position = glm::vec3(-0.5f,  0.5f, 0.0f);
+  circle.transform.position = glm::vec3(-0.5f,  0.5f, 0.0f);
 //circle.transform.scale = glm::vec3(0.5f, 0.5f, 0.5f);
   triangle.transform.position = glm::vec3( 0.5f, -0.5f, 0.0f);
   triangle.transform.scale = glm::vec3(0.5f, 0.5f, 0.5f);

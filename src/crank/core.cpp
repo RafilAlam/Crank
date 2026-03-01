@@ -78,13 +78,13 @@ glm::vec2 Window::getResolution() {
   return glm::vec2(w, h);
 }
 
-Mesh::Mesh(std::vector<float> &p_vertices, std::vector<uint32_t> &p_indices, MESH_TYPE p_type): vertices(p_vertices), indices(p_indices), type(p_type) {}
+Mesh::Mesh(std::vector<float> &p_vertices, std::vector<uint32_t> &p_indices, MESH_TYPE p_type, glm::vec2 p_size): vertices(p_vertices), indices(p_indices), type(p_type), size(p_size) {}
 float* Mesh::getVertices() { return vertices.data(); }
 uint32_t* Mesh::getIndices() { return indices.data(); }
 size_t Mesh::numVertices() { return vertices.size(); }
 size_t Mesh::numIndices() { return indices.size(); }
 Mesh Mesh::Raw(std::vector<float> p_vertices, std::vector<uint32_t> p_indices) {
-  return Mesh(p_vertices, p_indices, M_MODEL);
+  return Mesh(p_vertices, p_indices, M_MODEL, glm::vec2(0.0f));
 }
 Mesh Mesh::Rectangle(float width, float height) {
   float x = width/2;
@@ -101,7 +101,7 @@ Mesh Mesh::Rectangle(float width, float height) {
     2, 3, 0,
   };
 
-  return Mesh(vertices, indices, M_RECT);
+  return Mesh(vertices, indices, M_RECT, glm::vec2(width, height));
 }
 Mesh Mesh::Triangle(float base, float height) {
   float x = base/2;
@@ -115,7 +115,7 @@ Mesh Mesh::Triangle(float base, float height) {
     0, 1, 2
   };
 
-  return Mesh(vertices, indices, M_TRI);
+  return Mesh(vertices, indices, M_TRI, glm::vec2(base, height));
 }
 Mesh Mesh::Circle(float radius) {
   float x = radius;
@@ -132,7 +132,7 @@ Mesh Mesh::Circle(float radius) {
     2, 3, 0,
   };
 
-  return Mesh(vertices, indices, M_CIR);
+  return Mesh(vertices, indices, M_CIR, glm::vec2(radius));
 }
 
 Object::Object(Mesh &&p_mesh): mesh(p_mesh) {};
@@ -188,7 +188,7 @@ void Renderer2D::RenderStep() {
     glm::vec2 res = window.getResolution();
     glUniform2f(u_resolution, res.x, res.y);
     if (pair.second.mesh.type == M_CIR) 
-      glUniform1f(u_circleradius, pair.second.transform.scale.x/2);
+      glUniform1f(u_circleradius, pair.second.mesh.size.x);
     pair.second.Draw();
   }
 }

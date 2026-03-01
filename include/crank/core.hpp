@@ -43,9 +43,10 @@ class Mesh {
 private:
   std::vector<float> vertices;
   std::vector<uint32_t> indices;
-  Mesh(std::vector<float> &p_vertices, std::vector<uint32_t> &p_indices, MESH_TYPE p_type);
+  Mesh(std::vector<float> &p_vertices, std::vector<uint32_t> &p_indices, MESH_TYPE p_type, glm::vec2 p_size);
 public:
   MESH_TYPE type;
+  glm::vec2 size;
   float* getVertices();
   uint32_t* getIndices();
   size_t numVertices();
