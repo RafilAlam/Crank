@@ -25,6 +25,7 @@ cmake --build build
 
 <h2>Example Crank App</h2>
 <p>The code below is a basic example of an application that shows a spinning square, triangle and a circle.</p>
+
 ```cpp
 #include <iostream>
 #include <vector>
