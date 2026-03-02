@@ -5,8 +5,8 @@ but simulations, graph visualisations and tech showcases. </p>
 
 <h2> Installation: </h2>
 <p> Crank uses CMake as its build system. </p>
-<pre>
-<code>
+
+```bash
 cd path/to/crank/directory
 
 mkdir build
@@ -18,14 +18,14 @@ cmake ..
 cd ..
 
 cmake --build build
+```
 </code>
 </pre>
 <p>Application code can be found in the app directory.</p>
 
 <h2>Example Crank App</h2>
 <p>The code below is a basic example of an application that shows a spinning square, triangle and a circle.</p>
-<pre>
-<code>
+```cpp
 #include <iostream>
 #include <vector>
 
@@ -60,5 +60,4 @@ int main() {
   Renderer.Run();
   return 0;
 }
-</code>
-</pre>
+```
