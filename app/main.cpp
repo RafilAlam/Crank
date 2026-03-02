@@ -9,9 +9,9 @@ int frames{0};
 int main() {
   Window Window("Crank", 800, 600);
   Renderer2D Renderer(Window);
-  Object& circle = Renderer.Create("Circle1", Mesh::Circle(100));
+  Object& circle = Renderer.Create("Circle", Mesh::Circle(100));
   circle.color = glm::vec3(0.1f, 0.1f, 0.5f);
-  Object& triangle = Renderer.Create("Triangle2", Mesh::Triangle(100, 100));
+  Object& triangle = Renderer.Create("", Mesh::Triangle(100, 100));
   triangle.color = glm::vec3(0.8f, 0.2f, 0.2f);
 
   circle.transform.position = glm::vec3(500.0f, 200.0f, 0.0f);
