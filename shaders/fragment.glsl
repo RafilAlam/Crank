@@ -18,9 +18,8 @@ void main()
 {
   switch(u_meshtype) {
     case M_CIR:
-      vec2 ndc = (gl_FragCoord.xy / u_resolution) * 2.0 - 1.0;
-      float dist = distance(u_modelposition, ndc);
-      if (u_circleradius <= dist) {
+      float dist = distance(u_modelposition, gl_FragCoord.xy);
+      if (dist > u_circleradius) {
         discard;
       }
       else {

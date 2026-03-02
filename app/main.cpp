@@ -12,9 +12,9 @@ int main() {
   Object& circle = Renderer.Create("Circle1", Mesh::Circle(100));
   Object& triangle = Renderer.Create("Triangle2", Mesh::Triangle(100, 100));
 
-  circle.transform.position = glm::vec3(50.0f,  80.0f, 0.0f);
+  circle.transform.position = glm::vec3(200.0f, 20.0f, 0.0f);
   //circle.transform.scale = glm::vec3(100.0f, 100.0f, 1.0f);
-  triangle.transform.position = glm::vec3( 100.0f, 200.0f, 0.0f);
+  triangle.transform.position = glm::vec3(200.0f, 200.0f, 0.0f);
   //triangle.transform.scale = glm::vec3(100.0f, 100.0f, 100.0f);
 
   Window.Keybind(GLFW_KEY_E, []() { std::cout << "KEY 'E' PRESSED!" << std::endl; });

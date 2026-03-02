@@ -56,7 +56,7 @@ Window::Window(std::string name, int width, int height) {
   glfwMakeContextCurrent(handle);
   
   dataptr = new WindowData{this, NULL};
-  glfwSetWindowUserPointer(handle, &dataptr);
+  glfwSetWindowUserPointer(handle, dataptr);
   glfwSetKeyCallback(handle, [](GLFWwindow* handle, int key, int scancode, int action, int mods) {
     WindowData* dataptr = static_cast<WindowData*>(glfwGetWindowUserPointer(handle));
     if (action == GLFW_PRESS and dataptr->window->keybinds.count(key) > 0) {
@@ -215,6 +215,8 @@ void Renderer2D::Run() {
     RenderStep();
 
     glfwSwapBuffers(window.handle);
+    std::cout << "Window: " << std::endl;
+    std::cout << window.handle << std::endl;
     glfwPollEvents();
   }
   glfwTerminate();
