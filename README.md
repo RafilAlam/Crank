@@ -24,7 +24,7 @@ cmake --build build
 <p>Application code can be found in the app directory.</p>
 
 <h2>Example Crank App</h2>
-<p>The code below is a basic example of an application that shows a spinning square, triangle and a circle.</p>
+<p>The code below is a basic example of an application that shows a spinning square, triangle and a circle. Pressing E prints a statement.</p>
 
 ```cpp
 #include <iostream>
