@@ -174,6 +174,7 @@ Renderer2D::Renderer2D(Window &window): window(window) {
   u_projection = glGetUniformLocation(program, "u_projection");
   u_model = glGetUniformLocation(program, "u_model");
   u_modelposition = glGetUniformLocation(program, "u_modelposition");
+  u_color = glGetUniformLocation(program, "u_color");
   u_meshtype = glGetUniformLocation(program, "u_meshtype");
   u_resolution = glGetUniformLocation(program, "u_resolution");
   u_circleradius = glGetUniformLocation(program, "u_circleradius");
@@ -198,6 +199,7 @@ void Renderer2D::RenderStep() {
   for (auto &pair : Objects) {
     glUniformMatrix4fv(u_model, 1, GL_FALSE, glm::value_ptr(pair.second.transform.GetMatrix()));
     glUniform2f(u_modelposition, pair.second.transform.position.x, pair.second.transform.position.y);
+    glUniform3fv(u_color, 1, glm::value_ptr(pair.second.color));
     glUniform1i(u_meshtype, pair.second.mesh.type);
     glm::vec2 res = window.getResolution();
     glUniform2f(u_resolution, res.x, res.y);
@@ -215,8 +217,6 @@ void Renderer2D::Run() {
     RenderStep();
 
     glfwSwapBuffers(window.handle);
-    std::cout << "Window: " << std::endl;
-    std::cout << window.handle << std::endl;
     glfwPollEvents();
   }
   glfwTerminate();

@@ -10,6 +10,7 @@ in vec4 gl_FragCoord;
 out vec4 FragColor;
 
 uniform vec2 u_modelposition;
+uniform vec3 u_color;
 uniform int u_meshtype;
 uniform vec2 u_resolution;
 uniform float u_circleradius;
@@ -23,10 +24,10 @@ void main()
         discard;
       }
       else {
-        FragColor = vec4(0.2f, 0.5f, 0.2f, 1.0f);
+        FragColor = vec4(u_color, 1.0f);
       }
       break;
     default:
-      FragColor = vec4(0.2f, 0.5f, 0.2f, 1.0f);
+      FragColor = vec4(u_color, 1.0f);
   }
 }
