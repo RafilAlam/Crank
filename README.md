@@ -33,8 +33,6 @@ cmake --build build
 #include <crank/core.hpp>
 using namespace crank;
 
-int frames{0};
-
 int main() {
   Window Window("Crank", 800, 600);
   Renderer2D Renderer(Window);
