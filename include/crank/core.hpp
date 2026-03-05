@@ -82,6 +82,7 @@ public:
   GLuint VAO, VBO, EBO, program;
   Transform transform;
   glm::vec3 color = glm::vec3(1.0f);
+  float cornerradius = 0;
   Mesh mesh;
 
   Object(Mesh &&p_mesh);
@@ -92,7 +93,7 @@ class Renderer2D {
 private:
   GLuint VAO, VBO, EBO, program;
   GLint u_projection, u_model;
-  GLint u_modelposition, u_color, u_meshtype, u_resolution, u_circleradius;
+  GLint u_modelposition, u_modelsize, u_cornerradius, u_color, u_meshtype, u_resolution, u_circleradius;
 public:
   Window window;
   Renderer2D(Window &window);

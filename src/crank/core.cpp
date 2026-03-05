@@ -174,6 +174,8 @@ Renderer2D::Renderer2D(Window &window): window(window) {
   u_projection = glGetUniformLocation(program, "u_projection");
   u_model = glGetUniformLocation(program, "u_model");
   u_modelposition = glGetUniformLocation(program, "u_modelposition");
+  u_modelsize = glGetUniformLocation(program, "u_modelsize");
+  u_cornerradius = glGetUniformLocation(program, "u_cornerradius");
   u_color = glGetUniformLocation(program, "u_color");
   u_meshtype = glGetUniformLocation(program, "u_meshtype");
   u_resolution = glGetUniformLocation(program, "u_resolution");
@@ -182,6 +184,8 @@ Renderer2D::Renderer2D(Window &window): window(window) {
   glm::vec2 res = window.getResolution();
   glm::mat4 projection = glm::ortho(0.0f, (float)res.x, 0.0f, (float)res.y, -1.0f, 1.0f);
   glUniformMatrix4fv(u_projection, 1, GL_FALSE, glm::value_ptr(projection));
+
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
   window.dataptr->renderer = this;
 
@@ -196,15 +200,16 @@ Renderer2D::Renderer2D(Window &window): window(window) {
 
 void Renderer2D::RenderStep() {
   glUseProgram(program);
+  glEnable(GL_BLEND);
   for (auto &pair : Objects) {
     glUniformMatrix4fv(u_model, 1, GL_FALSE, glm::value_ptr(pair.second.transform.GetMatrix()));
     glUniform2f(u_modelposition, pair.second.transform.position.x, pair.second.transform.position.y);
+    glUniform2fv(u_modelsize, 1, glm::value_ptr(pair.second.mesh.size));
+    glUniform1f(u_cornerradius, pair.second.cornerradius);
     glUniform3fv(u_color, 1, glm::value_ptr(pair.second.color));
     glUniform1i(u_meshtype, pair.second.mesh.type);
     glm::vec2 res = window.getResolution();
     glUniform2f(u_resolution, res.x, res.y);
-    if (pair.second.mesh.type == M_CIR) 
-      glUniform1f(u_circleradius, pair.second.mesh.size.x);
     pair.second.Draw();
   }
 }
