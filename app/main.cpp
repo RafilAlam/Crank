@@ -12,7 +12,7 @@ int main() {
   rectangle.color = glm::vec3(0.5f, 0.1f, 0.1f);
   rectangle.cornerradius = 10.0f;
 
-  rectangle.transform.position = glm::vec3(0.0f, 0.0f, 0.0f);
+  rectangle.transform.position = glm::vec3(500.0f, 200.0f, 0.0f);
 
   Window.Keybind(GLFW_KEY_E, []() { std::cout << "KEY 'E' PRESSED!" << std::endl; });
 
