@@ -81,7 +81,9 @@ private:
 public:
   GLuint VAO, VBO, EBO, program;
   Transform transform;
-  glm::vec3 color = glm::vec3(1.0f);
+  glm::vec4 bgcolor = glm::vec4(1.0f);
+  glm::vec3 bordercolor = glm::vec4(1.0f);
+  float borderwidth = 0.0f;
   float roundness = 0;
   Mesh mesh;
 
@@ -93,7 +95,7 @@ class Renderer2D {
 private:
   GLuint VAO, VBO, EBO, program;
   GLint u_projection, u_model;
-  GLint u_modelposition, u_modelsize, u_roundness, u_color, u_meshtype, u_resolution, u_circleradius;
+  GLint u_modelposition, u_modelsize, u_roundness, u_bgcolor, u_bordercolor, u_borderwidth, u_meshtype, u_resolution, u_circleradius;
 public:
   Window window;
   Renderer2D(Window &window);

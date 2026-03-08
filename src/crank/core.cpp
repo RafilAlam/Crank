@@ -176,7 +176,9 @@ Renderer2D::Renderer2D(Window &window): window(window) {
   u_modelposition = glGetUniformLocation(program, "u_modelposition");
   u_modelsize = glGetUniformLocation(program, "u_modelsize");
   u_roundness = glGetUniformLocation(program, "u_roundness");
-  u_color = glGetUniformLocation(program, "u_color");
+  u_bgcolor = glGetUniformLocation(program, "u_bgcolor");
+  u_bordercolor = glGetUniformLocation(program, "u_bordercolor");
+  u_borderwidth = glGetUniformLocation(program, "u_borderwidth");
   u_meshtype = glGetUniformLocation(program, "u_meshtype");
   u_resolution = glGetUniformLocation(program, "u_resolution");
   u_circleradius = glGetUniformLocation(program, "u_circleradius");
@@ -206,7 +208,9 @@ void Renderer2D::RenderStep() {
     glUniform2f(u_modelposition, pair.second.transform.position.x, pair.second.transform.position.y);
     glUniform2fv(u_modelsize, 1, glm::value_ptr(pair.second.mesh.size));
     glUniform1f(u_roundness, pair.second.roundness);
-    glUniform3fv(u_color, 1, glm::value_ptr(pair.second.color));
+    glUniform4fv(u_bgcolor, 1, glm::value_ptr(pair.second.bgcolor));
+    glUniform3fv(u_bordercolor, 1, glm::value_ptr(pair.second.bordercolor));
+    glUniform1f(u_borderwidth, pair.second.borderwidth);
     glUniform1i(u_meshtype, pair.second.mesh.type);
     glm::vec2 res = window.getResolution();
     glUniform2f(u_resolution, res.x, res.y);

@@ -12,7 +12,9 @@ out vec4 FragColor;
 uniform vec2 u_modelposition;
 uniform vec2 u_modelsize;
 uniform float u_roundness;
-uniform vec3 u_color;
+uniform vec4 u_bgcolor;
+uniform vec3 u_bordercolor;
+uniform float u_borderwidth;
 uniform int u_meshtype;
 uniform vec2 u_resolution;
 
@@ -29,10 +31,14 @@ void main()
       vec2 halfsize = u_modelsize*0.5;
       float cornerradius = u_roundness * min(halfsize.x, halfsize.y);
       float d = sdfRect(gl_FragCoord.xy - u_modelposition, halfsize - cornerradius) - cornerradius;
-      float alpha = smoothstep(1.0, -1.0, d);
-      FragColor = vec4(u_color, alpha);
+
+      float fill = smoothstep(1.0, -1.0, d + u_borderwidth);
+      float border = smoothstep(1.0, -1.0, d) - fill;
+
+      float alpha = smoothstep(1.0, -1.0, d) * u_bgcolor.a;
+      FragColor = vec4(mix(u_bgcolor.rgb, u_bordercolor, border), alpha);
       break;
     default:
-      FragColor = vec4(u_color, 1.0f);
+      FragColor = u_bgcolor;
   }
 }

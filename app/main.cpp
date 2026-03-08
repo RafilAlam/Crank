@@ -11,13 +11,19 @@ int main() {
   Object& triangle = Renderer.Create("Triangle", Mesh::Triangle(100, 100));
   Object& circle = Renderer.Create("Circle", Mesh::Rectangle(100, 100));
  
-  circle.color = glm::vec3(0.5f, 0.1f, 0.1f);
+  circle.bgcolor = glm::vec4(0.5f, 0.1f, 0.1f, 1.0f);
+  circle.borderwidth = 10.0f;
+  circle.bordercolor = glm::vec3(1.0f);
   circle.roundness = 1.0f;
 
-  rectangle.color = glm::vec3(0.1f, 0.5f, 0.1f);
+  rectangle.bgcolor = glm::vec4(0.1f, 0.5f, 0.1f, 1.0f);
+  rectangle.borderwidth = 10.0f;
+  rectangle.bordercolor = glm::vec3(1.0f);
   rectangle.roundness = 0.5f;
 
-  triangle.color = glm::vec3(0.1f, 0.1f, 0.5f);
+  triangle.bgcolor = glm::vec4(0.1f, 0.1f, 0.5f, 1.0f);
+  triangle.borderwidth = 10.0f;
+  triangle.bordercolor = glm::vec3(1.0f);
   triangle.roundness = 1.0f;
 
   circle.transform.position = glm::vec3(600.0f, 200.0f, 0.0f);
