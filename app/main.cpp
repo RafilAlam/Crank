@@ -10,7 +10,7 @@ private:
   Renderer2D* renderer;
   Object* body;
   Object* moon;
-  uint32_t angle {0};
+  float angle {0.0f};
 public:
   Planet(Window& p_window, Renderer2D& p_renderer)
   : window(&p_window),
@@ -33,7 +33,11 @@ public:
 
   void update() {
     body->transform.position = glm::vec3(window->resolution.x*0.5f, window->resolution.y*0.5f, 0.0f);
-    moon->transform.position = glm::vec3(body->transform.position.x, body->transform.position.y, 0.0f);
+    float sinv = sin(angle);
+    float cosv = cos(angle);
+    moon->transform.position = glm::vec3(body->transform.position.x+300*sinv, body->transform.position.y, 0.03f*cosv);
+    moon->transform.scale = glm::vec3(cosv+2.0f, cosv+2.0f, 0.0f);
+    angle+=0.01f;
   }
 };
 
