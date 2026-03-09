@@ -204,18 +204,29 @@ Renderer2D::Renderer2D(Window &window): window(window) {
 void Renderer2D::RenderStep() {
   glUseProgram(program);
   glEnable(GL_BLEND);
-  for (auto &pair : Objects) {
-    glUniformMatrix4fv(u_model, 1, GL_FALSE, glm::value_ptr(pair.second.transform.GetMatrix()));
-    glUniform2f(u_modelposition, pair.second.transform.position.x, pair.second.transform.position.y);
-    glUniform2f(u_modelsize, pair.second.mesh.size.x*pair.second.transform.scale.x, pair.second.mesh.size.y*pair.second.transform.scale.y);
-    glUniform1f(u_roundness, pair.second.roundness);
-    glUniform4fv(u_bgcolor, 1, glm::value_ptr(pair.second.bgcolor));
-    glUniform3fv(u_bordercolor, 1, glm::value_ptr(pair.second.bordercolor));
-    glUniform1f(u_borderwidth, pair.second.borderwidth);
-    glUniform1i(u_meshtype, pair.second.mesh.type);
+
+  std::vector<Object*> orderedObjects;
+  orderedObjects.reserve(Objects.size());
+  for (auto& [id, obj] : Objects) {
+    orderedObjects.push_back(&obj);
+  }
+  std::stable_sort(orderedObjects.begin(), orderedObjects.end(), [](const Object* a, const Object* b) {
+    if (a->transform.position.z != b->transform.position.z) return a->transform.position.z < b->transform.position.z;
+    return true;
+  });
+
+  for (Object* obj : orderedObjects) {
+    glUniformMatrix4fv(u_model, 1, GL_FALSE, glm::value_ptr(obj->transform.GetMatrix()));
+    glUniform2f(u_modelposition, obj->transform.position.x, obj->transform.position.y);
+    glUniform2f(u_modelsize, obj->mesh.size.x*obj->transform.scale.x, obj->mesh.size.y*obj->transform.scale.y);
+    glUniform1f(u_roundness, obj->roundness);
+    glUniform4fv(u_bgcolor, 1, glm::value_ptr(obj->bgcolor));
+    glUniform3fv(u_bordercolor, 1, glm::value_ptr(obj->bordercolor));
+    glUniform1f(u_borderwidth, obj->borderwidth);
+    glUniform1i(u_meshtype, obj->mesh.type);
     glm::vec2 res = window.getResolution();
     glUniform2f(u_resolution, res.x, res.y);
-    pair.second.Draw();
+    obj->Draw();
   }
 }
 

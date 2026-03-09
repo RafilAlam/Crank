@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include <utility>
 #include <math.h>
+#include <algorithm>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
