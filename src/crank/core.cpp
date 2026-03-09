@@ -47,6 +47,7 @@ Window::Window(std::string name, int width, int height) {
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+  glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_TRUE);
 
   handle = glfwCreateWindow(width, height, name.c_str(), NULL, NULL);
   if (!handle) {
@@ -182,20 +183,20 @@ Renderer2D::Renderer2D(Window &window): window(window) {
   u_meshtype = glGetUniformLocation(program, "u_meshtype");
   u_resolution = glGetUniformLocation(program, "u_resolution");
   u_circleradius = glGetUniformLocation(program, "u_circleradius");
-  
-  glm::vec2 res = window.getResolution();
-  glm::mat4 projection = glm::ortho(0.0f, (float)res.x, 0.0f, (float)res.y, -1.0f, 1.0f);
+
+  window.resolution = window.getResolution();
+
+  glm::mat4 projection = glm::ortho(0.0f, (float)window.resolution.x, 0.0f, (float)window.resolution.y, -1.0f, 1.0f);
   glUniformMatrix4fv(u_projection, 1, GL_FALSE, glm::value_ptr(projection));
 
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
   window.dataptr->renderer = this;
-
   glfwSetFramebufferSizeCallback(window.handle, [](GLFWwindow* window, int f_width, int f_height) {
     WindowData* dataptr = static_cast<WindowData*>(glfwGetWindowUserPointer(window));
-    glViewport(0, 0, f_width, f_height);
-    glm::vec2 res = dataptr->window->getResolution();
-    glm::mat4 projection = glm::ortho(0.0f, (float)res.x, 0.0f, (float)res.y, -1.0f, 1.0f);
+    dataptr->window->resolution = glm::vec2(f_width, f_height);
+    glViewport(0, 0, dataptr->window->resolution.x, dataptr->window->resolution.y);
+    glm::mat4 projection = glm::ortho(0.0f, (float)dataptr->window->resolution.x, 0.0f, (float)dataptr->window->resolution.y, -1.0f, 1.0f);
     glUniformMatrix4fv(dataptr->renderer->u_projection, 1, GL_FALSE, glm::value_ptr(projection));
   });
 }

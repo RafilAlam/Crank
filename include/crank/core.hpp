@@ -31,6 +31,7 @@ private:
 public:
   GLFWwindow* handle;
   WindowData* dataptr;
+  glm::vec2 resolution;
   Window(std::string name, int width, int height);
   void Keybind(int key, std::function<void()> callback); // key is GLFW key tokens
   glm::vec2 getResolution();
