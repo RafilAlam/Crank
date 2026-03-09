@@ -14,6 +14,7 @@ int main() {
   circle.borderwidth = 1.0f;
   circle.bordercolor = glm::vec3(1.0f);
   circle.roundness = 1.0f;
+  circle.transform.scale = glm::vec3(3.0f, 3.0f, 0.0f);
 
   Window.Keybind(GLFW_KEY_F, [&]() {
       printf("ResX: %f, ResY: %f\r", Window.resolution.x, Window.resolution.y);

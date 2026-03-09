@@ -207,7 +207,7 @@ void Renderer2D::RenderStep() {
   for (auto &pair : Objects) {
     glUniformMatrix4fv(u_model, 1, GL_FALSE, glm::value_ptr(pair.second.transform.GetMatrix()));
     glUniform2f(u_modelposition, pair.second.transform.position.x, pair.second.transform.position.y);
-    glUniform2fv(u_modelsize, 1, glm::value_ptr(pair.second.mesh.size));
+    glUniform2f(u_modelsize, pair.second.mesh.size.x*pair.second.transform.scale.x, pair.second.mesh.size.y*pair.second.transform.scale.y);
     glUniform1f(u_roundness, pair.second.roundness);
     glUniform4fv(u_bgcolor, 1, glm::value_ptr(pair.second.bgcolor));
     glUniform3fv(u_bordercolor, 1, glm::value_ptr(pair.second.bordercolor));
