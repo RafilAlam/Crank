@@ -1,8 +1,10 @@
-<h1 align="center"> Crank - Graphics Engine </h1>
-WARNING: DEPRECATED (check out ![GraphX](https://github.com/RafilAlam/Graphx)
-<p><strong>Crank</strong> is an OpenGL Graphics Engine written in the C++ language.
-It can be used to quickly write cross-platform C++ applications including not just games, 
-but simulations, graph visualisations and tech showcases. </p>
+<h1 align="center">Crank - Graphics Engine</h1>
+
+> **⚠️ WARNING: DEPRECATED**  
+> This project is no longer maintained. Please check out **[GraphX](https://github.com/RafilAlam/Graphx)** instead.
+
+<p><strong>Crank</strong> is an OpenGL Graphics Engine written in C++. It can be used to quickly write cross-platform C++ applications, including games, simulations, graph visualizations, and tech showcases.</p>
+
 
 <h2> Installation: </h2>
 <p> Crank uses CMake as its build system. </p>
